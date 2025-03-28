@@ -1,8 +1,8 @@
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { polyline, getLines, getColor } from './Lines';
-import { createTrainMarkers } from './Trains';
 import { JSX } from 'react';
 import { getLatestTrainData } from './API';
+import { Vehicles } from './models/TrainInfo';
 import 'leaflet/dist/leaflet.css'
 
 function renderLines(): JSX.Element[] {
@@ -12,12 +12,28 @@ function renderLines(): JSX.Element[] {
         <Polyline positions={polyline(e)} color={getColor(e)} />
       )
   })
-
   return element;
 }
 
 function renderTrains(): JSX.Element[] {
-  return createTrainMarkers(getLatestTrainData());
+  let traininfo: Vehicles = getLatestTrainData();
+  let element: JSX.Element[] = []
+    // console.log(typeof data);
+    
+    traininfo.data.forEach((e) => {
+        console.log(e);
+        element.push(
+            <Marker position={[e.latitude, e.longitude]}>
+                <Popup>
+                    <h2>{e.label}</h2>
+                    <p>Speed: {e.speed}</p>
+                    <p>Headsign: {e.headsign}</p>
+                </Popup>
+            </Marker>
+        )
+    })
+
+    return element;
 }
 
 
