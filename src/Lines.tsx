@@ -1,4 +1,4 @@
-import { decode, encode } from "@googlemaps/polyline-codec";
+import { decode } from "@googlemaps/polyline-codec";
 
 let lines = {
     "Red": [
@@ -110,6 +110,7 @@ export function getColor(line: string): string {
     let half = line.split("-")[0];
     switch(half) {
         case "Red":
+        case "Mattapan":
             return "#DA291C";
         case "Blue":
             return "#003DA5";

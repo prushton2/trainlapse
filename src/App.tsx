@@ -7,11 +7,7 @@ import { MyMap } from './Map.tsx'
 function App() {
   // const [count, setCount] = useState(0)
 
-  return (
-    <>
-      {MyMap()}
-    </>
-  )
+  return MyMap()
 }
 
 export default App
