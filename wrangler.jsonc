@@ -1,5 +1,5 @@
 {   
     "name": "trainlapse",
     "compatibility_date": "2025-03-29",
-    "main": "dist/assets/index-umv2q1KY.js"
+    "main": "src/index.ts",
 }
