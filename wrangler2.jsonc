@@ -1,5 +1,0 @@
-{   
-    "name": "trainlapse",
-    "compatibility_date": "2025-03-29",
-    "main": "src/index.ts",
-}
