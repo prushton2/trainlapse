@@ -16,7 +16,7 @@ export function App() {
     let element: JSX.Element[] = []
     getLines().forEach((e: string) => {
       element.push(
-        <Polyline key={element.length} positions={polyline(e)} color={getColor(e)} />
+        <Polyline key={element.length} positions={polyline(e) as any} color={getColor(e)} />
       )
     })
     return element;
