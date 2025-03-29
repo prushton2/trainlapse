@@ -8,6 +8,8 @@ import { TrainInfoResponse } from './models/TrainInfo';
 
 export function App() {
   const [slider, setSlider] = useState<number>(0);
+  const [sliderMax, setSliderMax] = useState<number>(0);
+  const [trainInfo, setTrainInfo] = useState<TrainInfoResponse | null>(null);
   const [trainData, setTrainData] = useState<JSX.Element[]>([]);
 
   function renderLines(): JSX.Element[] {
@@ -21,10 +23,15 @@ export function App() {
   }
   
   async function renderTrains(): Promise<JSX.Element[]> {
-    let traininfo: TrainInfoResponse = await getLatestTrainData();
+    if(trainInfo === null) {
+      let trainInfo: TrainInfoResponse = await getLatestTrainData();
+      setTrainInfo(trainInfo);
+      setSliderMax(trainInfo.size)
+      return []
+    }
     let element: JSX.Element[] = []
-    console.log(traininfo.elements[slider].timestamp)
-    traininfo.elements[slider].data.forEach((e) => {
+    console.log(trainInfo.elements[slider].timestamp)
+    trainInfo.elements[slider].data.forEach((e) => {
       element.push(
         <Marker key={element.length} position={[e.latitude, e.longitude]}>
           <Popup>
@@ -52,7 +59,7 @@ export function App() {
 
   return <>
       <div className="slidecontainer">
-        <input type="range" min="1" max="100" className="slider" onChange={(e) => setSlider(e.target.valueAsNumber)}/>
+        <input type="range" min="1" max={sliderMax} className="slider" onChange={(e) => setSlider(e.target.valueAsNumber)}/>
       </div>
       <MapContainer center={[42.36041830331139, -71.0580009624248]} zoom={13} style={{ height:"1080px",backgroundColor:"black" }}>
         <TileLayer url="https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" />

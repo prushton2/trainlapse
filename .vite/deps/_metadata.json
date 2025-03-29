@@ -1,8 +1,55 @@
 {
-  "hash": "c7b5bdca",
+  "hash": "1f37b11e",
   "configHash": "67fde073",
-  "lockfileHash": "e3b0c442",
-  "browserHash": "7189de70",
-  "optimized": {},
-  "chunks": {}
+  "lockfileHash": "4aa261f8",
+  "browserHash": "d8813b17",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "7f5a5ea0",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "92b6936c",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "67425deb",
+      "needsInterop": true
+    },
+    "react-leaflet": {
+      "src": "../../node_modules/react-leaflet/lib/index.js",
+      "file": "react-leaflet.js",
+      "fileHash": "1758a09e",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "8f401bf9",
+      "needsInterop": false
+    },
+    "@googlemaps/polyline-codec": {
+      "src": "../../node_modules/@googlemaps/polyline-codec/dist/index.esm.js",
+      "file": "@googlemaps_polyline-codec.js",
+      "fileHash": "ca58e9e2",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-BVONTIK6": {
+      "file": "chunk-BVONTIK6.js"
+    },
+    "chunk-2GK3IQSO": {
+      "file": "chunk-2GK3IQSO.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
 }
