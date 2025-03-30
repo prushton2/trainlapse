@@ -14,7 +14,7 @@ export function App() {
   const [autoplaySpeed, setAutoplaySpeed] = useState<number>(0);
   const [sliderMax, setSliderMax] = useState<number>(0);
   const [trainInfo, setTrainInfo] = useState<TrainInfoResponse | null>(null);
-  const [trainHTML, setTrainHTML] = useState<JSX.Element[]>([]);
+  // const [trainHTML, setTrainHTML] = useState<JSX.Element[]>([]);
 
   let icon: Icon = new Icon({
     iconUrl: trainIcon,
@@ -33,22 +33,17 @@ export function App() {
     return element;
   }
   
-  async function renderTrains(): Promise<JSX.Element[]> {
-    if(trainInfo === null) {
-      let trainInfo: TrainInfoResponse = await getLatestTrainData();
-      setTrainInfo(trainInfo);
-      setSliderMax(trainInfo.size-1)
+  function renderTrains(): JSX.Element[] {
+    if (trainInfo == null) {
       return []
     }
-
     let element: JSX.Element[] = []
     trainInfo.elements[slider].data.forEach((e) => {
       element.push(<>
           <Marker icon={icon} key={element.length*2} position={[e.latitude, e.longitude]}>
-            <img src={trainIcon} alt="Train" />
             <Popup>
               <h2>{e.label} ({getVehicleType(parseInt(e.label))})</h2>
-              <p>Speed: {e.speed}</p>
+              <p>Speed: {e.speed || 0.0}</p>
               <p>Headsign: {e.headsign}</p>
             </Popup>
           </Marker>
@@ -71,10 +66,12 @@ export function App() {
   
   useEffect(() => {
     async function run() {
-      setTrainHTML(await renderTrains())
+      let data = await getLatestTrainData()
+      setTrainInfo(data);
+      setSliderMax(data.size-1);
     }
     run()
-  }, [slider])
+  }, [])
 
   useEffect(() => {
     let interval: number = 0;
@@ -114,7 +111,7 @@ export function App() {
       <MapContainer center={[42.36041830331139, -71.0580009624248]} zoom={13} style={{ height: "93vh", width: "80%", backgroundColor:"black" }}>
         <TileLayer url="https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" />
         {renderLines()}
-        {trainHTML}
+        {renderTrains()}
       </MapContainer>
       
     </>
