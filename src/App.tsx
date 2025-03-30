@@ -7,6 +7,7 @@ import { polyline, getLines, getColor } from './Lines';
 import { JSX, useEffect, useState } from 'react';
 import { getLatestTrainData } from './API';
 import { TrainInfoResponse } from './models/TrainInfo';
+import { getVehicleType } from './TrainInfo';
 
 export function App() {
   const [slider, setSlider] = useState<number>(0);
@@ -43,9 +44,9 @@ export function App() {
     trainInfo.elements[slider].data.forEach((e) => {
       element.push(<>
           <Marker icon={icon} key={element.length} position={[e.latitude, e.longitude]}>
-            <img src={trainIcon} alt="React Logo" />
+            <img src={trainIcon} alt="Train" />
             <Popup>
-              <h2>{e.label}</h2>
+              <h2>{e.label} ({getVehicleType(parseInt(e.label))})</h2>
               <p>Speed: {e.speed}</p>
               <p>Headsign: {e.headsign}</p>
             </Popup>
