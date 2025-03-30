@@ -11,6 +11,7 @@ import { getVehicleType } from './TrainInfo';
 
 export function App() {
   const [slider, setSlider] = useState<number>(0);
+  const [autoplaySpeed, setAutoplaySpeed] = useState<number>(0);
   const [sliderMax, setSliderMax] = useState<number>(0);
   const [trainInfo, setTrainInfo] = useState<TrainInfoResponse | null>(null);
   const [trainHTML, setTrainHTML] = useState<JSX.Element[]>([]);
@@ -75,18 +76,39 @@ export function App() {
     run()
   }, [slider])
 
+  useEffect(() => {
+    let interval: number = 0;
+    if (autoplaySpeed > 0) {
+
+      interval = setInterval(() => {
+        setSlider((prevSlider) => {
+          if (prevSlider >= sliderMax) {
+            return 0;
+          }
+          return prevSlider + 1;
+        });
+      }, 1000 / autoplaySpeed);
+
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [autoplaySpeed]);
+
   return <>
       <div className="slidecontainer" style={{ height: "5vh" }}>
-        <input type="range" min="1" max={sliderMax} className="slider" onChange={(e) => setSlider(e.target.valueAsNumber)}/>
+        <input type="range" min="1" value={slider} max={sliderMax} className="slider" onChange={(e) => setSlider(e.target.valueAsNumber)}/>
       </div>
       
       <div style={{ position: "absolute", right: "1vh", top: "4vh", color: "white" }}>
         <h3>Time: {trainInfo == null ? 0 : convertTimestampToDate(trainInfo.elements[slider].timestamp)}</h3>
       </div>
-      
-      {/* <div className="slidecontainer" style={{ position: "absolute", right: "1vh", top: "10vh", height: "5vh", width: "18%"}}>
-        <input type="range" min="1" max="10" className="slider"/>
-      </div> */}
+
+      <div className="slidecontainer" style={{ position: "absolute", right: "1vh", top: "10vh", height: "5vh", width: "18%"}}>
+        <input type="range" min="0" max="60" className="slider" defaultValue="0" onChange={(e) => setAutoplaySpeed(e.target.valueAsNumber)}/>
+        <p style={{ color: "white", fontSize: "0.8em", textAlign: "center", marginTop: "5px" }}>Adjust autoplay speed ({autoplaySpeed == 0 ? "off" : `${autoplaySpeed}min/sec`})</p>
+      </div>
 
 
       <MapContainer center={[42.36041830331139, -71.0580009624248]} zoom={13} style={{ height: "93vh", width: "80%", backgroundColor:"black" }}>
