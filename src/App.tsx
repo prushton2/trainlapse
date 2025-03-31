@@ -4,7 +4,7 @@ import trainIcon from './assets/train.svg'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker} from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { polyline, getLines, getColor } from './Lines';
-import { JSX, useEffect, useState, cloneElement} from 'react';
+import { JSX, useEffect, useState} from 'react';
 import { getLatestTrainData } from './API';
 import { TrainInfoResponse } from './models/TrainInfo';
 import { getVehicleType } from './TrainInfo';
