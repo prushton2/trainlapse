@@ -4,7 +4,7 @@ import trainIcon from './assets/train.svg'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker} from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { polyline, getLines, getColor } from './Lines';
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useState, cloneElement} from 'react';
 import { getLatestTrainData } from './API';
 import { TrainInfoResponse } from './models/TrainInfo';
 import { getVehicleType } from './TrainInfo';
@@ -16,7 +16,8 @@ export function App() {
   const [autoplaySpeed, setAutoplaySpeed] = useState<number>(0);
   const [sliderMax, setSliderMax] = useState<number>(0);
   const [trainInfo, setTrainInfo] = useState<TrainInfoResponse | null>(null);
-  // const [markerMap, setMarkerMap] = useState<string, JSX.Element>)
+  const [persistTrains, setPersistTrains] = useState<boolean>(false);
+
   let icon: Icon = new Icon({
     iconUrl: trainIcon,
     iconSize: [25, 25],
@@ -39,19 +40,25 @@ export function App() {
       return []
     }
 
+    if(!persistTrains) {
+      [...markerMap.keys()].forEach((e) => {
+        markerMap.set(e, <></>)
+      })
+    }
+
     trainInfo.elements[slider].data.forEach((e) => {
-        markerMap.set(e.label, <div key={e.label}>
-          <Marker icon={icon} position={[e.latitude, e.longitude]}>
-            <Popup>
-              <h2>{e.label} ({getVehicleType(parseInt(e.label))})</h2>
-              <p>Speed: {e.speed || 0.0}</p>
-              <p>Headsign: {e.headsign}</p>
-            </Popup>
-          </Marker>
-          <CircleMarker center={[e.latitude, e.longitude]} radius={15} color={getColor("CR-all")} fillColor={getColor("CR-all")} fillOpacity={1}/>
-        </div>)
+      markerMap.set(e.label, <div key={e.label} style={{display: "none"}}>
+        <Marker icon={icon} position={[e.latitude, e.longitude]}>
+          <Popup>
+            <h2>{e.label} ({getVehicleType(parseInt(e.label))})</h2>
+            <p>Speed: {e.speed || 0.0}</p>
+            <p>Headsign: {e.headsign}</p>
+          </Popup>
+        </Marker>
+        <CircleMarker center={[e.latitude, e.longitude]} radius={15} color={getColor("CR-all")} fillColor={getColor("CR-all")} fillOpacity={1}/>
+      </div>)
     })
-    
+
     return [...markerMap.values()];
   }
 
@@ -65,6 +72,7 @@ export function App() {
     });
   }
   
+
   useEffect(() => {
     async function run() {
       let data = await getLatestTrainData()
@@ -106,6 +114,11 @@ export function App() {
       <div className="slidecontainer" style={{ position: "absolute", right: "1vh", top: "10vh", height: "5vh", width: "18%"}}>
         <input type="range" min="0" max="60" className="slider" defaultValue="0" onChange={(e) => setAutoplaySpeed(e.target.valueAsNumber)}/>
         <p style={{ color: "white", fontSize: "0.8em", textAlign: "center", marginTop: "5px" }}>Adjust autoplay speed ({autoplaySpeed == 0 ? "off" : `${autoplaySpeed}min/sec`})</p>
+      </div>
+
+      <div className="slidecontainer" style={{ position: "absolute", right: "1vh", top: "15vh", height: "5vh", width: "18%"}}>
+        {/* <input type="range" min="0" max="60" className="slider" defaultValue="0" onChange={(e) => setAutoplaySpeed(e.target.valueAsNumber)}/> */}
+        <input type="checkbox" onChange={(e) => setPersistTrains(e.target.checked)}/><label style={{ color: "white", fontSize: "0.8em", textAlign: "center", marginTop: "5px", width: "fill"}}> Persist out of service trains</label>
       </div>
 
 
