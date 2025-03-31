@@ -9,13 +9,14 @@ import { getLatestTrainData } from './API';
 import { TrainInfoResponse } from './models/TrainInfo';
 import { getVehicleType } from './TrainInfo';
 
+let markerMap: Map<string, JSX.Element> = new Map<string, JSX.Element>();
+
 export function App() {
   const [slider, setSlider] = useState<number>(0);
   const [autoplaySpeed, setAutoplaySpeed] = useState<number>(0);
   const [sliderMax, setSliderMax] = useState<number>(0);
   const [trainInfo, setTrainInfo] = useState<TrainInfoResponse | null>(null);
-  // const [trainHTML, setTrainHTML] = useState<JSX.Element[]>([]);
-
+  // const [markerMap, setMarkerMap] = useState<string, JSX.Element>)
   let icon: Icon = new Icon({
     iconUrl: trainIcon,
     iconSize: [25, 25],
@@ -37,21 +38,21 @@ export function App() {
     if (trainInfo == null) {
       return []
     }
-    let element: JSX.Element[] = []
+
     trainInfo.elements[slider].data.forEach((e) => {
-      element.push(<>
-          <Marker icon={icon} key={element.length*2} position={[e.latitude, e.longitude]}>
+        markerMap.set(e.label, <div key={e.label}>
+          <Marker icon={icon} position={[e.latitude, e.longitude]}>
             <Popup>
               <h2>{e.label} ({getVehicleType(parseInt(e.label))})</h2>
               <p>Speed: {e.speed || 0.0}</p>
               <p>Headsign: {e.headsign}</p>
             </Popup>
           </Marker>
-          <CircleMarker key={element.length*2+1} center={[e.latitude, e.longitude]} radius={15} color={getColor("CR-all")} fillColor={getColor("CR-all")} fillOpacity={1}/>
-        </>
-      )
+          <CircleMarker center={[e.latitude, e.longitude]} radius={15} color={getColor("CR-all")} fillColor={getColor("CR-all")} fillOpacity={1}/>
+        </div>)
     })
-    return element;
+    
+    return [...markerMap.values()];
   }
 
   function convertTimestampToDate(timestamp: number): String {
